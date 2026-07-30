@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@v4
+      - uses: DeterminateSystems/magic-nix-cache-action@v2
+      - run: nix flake check
+      - run: nix build
+      - name: Verify output
+        run: |
+          test -f result/manifest.json
+          test -f result/content.js
+          test -f result/intercept.js
+          test -f result/modal.css
+          test -f result/mux-worker.js
+          test -f result/icons/icon128.png
+          test ! -f result/key.pem
+          echo "All files present, key.pem excluded"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ms-teams-downloader
+          path: result/

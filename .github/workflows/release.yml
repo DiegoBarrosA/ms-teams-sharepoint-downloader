@@ -1,0 +1,25 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Package Chrome
+        shell: pwsh
+        run: scripts/package-extension.ps1 -Force
+      - name: Package Firefox
+        shell: pwsh
+        run: scripts/package-extension.ps1 -Target Firefox -Force
+      - name: Verify packages
+        run: |
+          unzip -l releases/ms-teams-downloader-*.zip
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: releases/ms-teams-downloader-*.zip
+          draft: true
