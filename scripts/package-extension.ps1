@@ -1,13 +1,18 @@
 #!/usr/bin/env pwsh
-# Package the extension into releases/ms-teams-downloader-v<version>.zip.
+# Package the extension into releases/ms-teams-downloader[-firefox]-v<version>.zip.
 # Reads version from src/manifest.json. Refuses to overwrite an existing zip.
 #
 # Usage:
-#   pwsh scripts/package-extension.ps1
-#   pwsh scripts/package-extension.ps1 -Force        # overwrite existing zip
+#   pwsh scripts/package-extension.ps1              # Chrome (default)
+#   pwsh scripts/package-extension.ps1 -Force       # overwrite existing zip
+#   pwsh scripts/package-extension.ps1 -Target Firefox   # Firefox package
+#   pwsh scripts/package-extension.ps1 -Target Firefox -Force
 
 [CmdletBinding()]
 param(
+    [ValidateSet('Chrome', 'Firefox')]
+    [string]$Target = 'Chrome',
+
     [switch]$Force
 )
 
@@ -29,7 +34,8 @@ if (-not $version) { throw 'version missing from manifest.json' }
 $releasesDir = Join-Path $repoRoot 'releases'
 if (-not (Test-Path $releasesDir)) { New-Item -ItemType Directory -Path $releasesDir | Out-Null }
 
-$zipName = "ms-teams-downloader-v$version.zip"
+$targetSuffix = if ($Target -eq 'Firefox') { '-firefox' } else { '' }
+$zipName = "ms-teams-downloader$targetSuffix-v$version.zip"
 $zipPath = Join-Path $releasesDir $zipName
 
 # Also clean up any stale zip at the old repo-root location.
@@ -44,6 +50,17 @@ if (Test-Path $zipPath) {
         Remove-Item $zipPath -Force
     } else {
         throw "$zipName already exists. Bump the version in src/manifest.json or pass -Force."
+    }
+}
+
+# Firefox-specific preflight: verify browser_specific_settings exists
+if ($Target -eq 'Firefox') {
+    if (-not $manifest.browser_specific_settings -or -not $manifest.browser_specific_settings.gecko -or -not $manifest.browser_specific_settings.gecko.id) {
+        throw "Firefox package requires 'browser_specific_settings.gecko.id' in manifest.json"
+    }
+    $geckoMin = $manifest.browser_specific_settings.gecko.strict_min_version
+    if (-not $geckoMin) {
+        Write-Host "WARNING: No 'strict_min_version' set in browser_specific_settings.gecko" -ForegroundColor Yellow
     }
 }
 

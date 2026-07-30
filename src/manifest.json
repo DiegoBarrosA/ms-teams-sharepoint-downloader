@@ -55,5 +55,11 @@
         "https://teams.cloud.microsoft/*"
       ]
     }
-  ]
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "teams-downloader@brendangooden.github.io",
+      "strict_min_version": "128.0"
+    }
+  }
 }

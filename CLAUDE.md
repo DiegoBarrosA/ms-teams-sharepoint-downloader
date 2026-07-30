@@ -12,16 +12,27 @@ Guidance for Claude when working in this repo.
 
 ## Building a release zip
 
-Always use `scripts/package-extension.ps1` — do not zip `src/` manually. The script reads `version` from `src/manifest.json`, refuses to overwrite an existing zip (bump the version first), excludes `key.pem` + `.DS_Store` + `Thumbs.db`, and writes `ms-teams-downloader-v<version>.zip` to the repo root.
+Always use `scripts/package-extension.ps1` — do not zip `src/` manually. The script reads `version` from `src/manifest.json`, refuses to overwrite an existing zip (bump the version first), excludes `key.pem` + `.DS_Store` + `Thumbs.db`. Supports both Chrome and Firefox targets.
 
 ```pwsh
 # 1. Bump src/manifest.json "version"
-# 2. Run:
+# 2. Build Chrome package:
 pwsh scripts/package-extension.ps1
+# 3. Build Firefox package:
+pwsh scripts/package-extension.ps1 -Target Firefox
 # Use -Force only if you intentionally want to overwrite an existing zip.
 ```
 
-Verify the result with `unzip -l releases/ms-teams-downloader-v<version>.zip` — expect 6 entries (`icons/icon128.png`, `content.js`, `intercept.js`, `manifest.json`, `modal.css`, `mux-worker.js`) and no `key.pem`.
+Verify the result with `unzip -l releases/ms-teams-downloader[-firefox]-v<version>.zip` — expect 6 entries (`icons/icon128.png`, `content.js`, `intercept.js`, `manifest.json`, `modal.css`, `mux-worker.js`) and no `key.pem`.
+
+## Building with Nix
+
+```sh
+nix build                                # unpacked extension in result/
+nix build .#chrome-zip                   # Chrome release zip
+nix build .#firefox-zip                  # Firefox release zip
+nix develop                              # dev shell with pwsh + web-ext
+```
 
 ## Don'ts
 

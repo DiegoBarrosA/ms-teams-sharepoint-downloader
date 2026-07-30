@@ -9,7 +9,7 @@ body:
         Thanks for taking the time to report a bug. The more detail you give, the more likely it gets fixed.
 
         **Before you start:**
-        - Try reloading the page and the extension (`chrome://extensions/` → reload).
+        - Try reloading the page and the extension (go to `about:debugging#/runtime/this-firefox` for Firefox or `chrome://extensions/` for Chrome → reload).
         - Check the [Known limitations](../../blob/main/README.md#known-limitations) — DRM-protected videos and guest-account views genuinely cannot be downloaded.
 
   - type: input
@@ -52,11 +52,13 @@ body:
   - type: textarea
     id: console-output
     attributes:
-      label: Chrome console output
+      label: Browser console output
       description: |
         Open DevTools (F12) → **Console** tab. Reload the page, reproduce the bug, then copy any messages containing `[Transcript Downloader]` **and** any red errors.
 
         Tip: type `Transcript Downloader` in the Console filter box to narrow it down.
+
+        **Firefox users:** Right-click the page → Inspect → Console.
       render: text
       placeholder: |
         [Transcript Downloader] Content script loaded
@@ -75,7 +77,7 @@ body:
     id: extension-version
     attributes:
       label: Extension version
-      description: From `chrome://extensions/` → card for this extension.
+      description: From `about:debugging#/runtime/this-firefox` for Firefox or `chrome://extensions/` for Chrome → card for this extension.
       placeholder: "1.2.4"
     validations:
       required: true
@@ -84,7 +86,7 @@ body:
     id: browser
     attributes:
       label: Browser + OS
-      placeholder: "Chrome 131 on Windows 11 / Edge 130 on macOS 14"
+      placeholder: "Chrome 131 on Windows 11 / Firefox 132 on Arch"
     validations:
       required: true
 

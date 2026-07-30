@@ -1,8 +1,9 @@
-# MS Teams / SharePoint / Stream — Video & Transcript Downloader (Chrome Extension)
+# MS Teams / SharePoint / Stream — Video & Transcript Downloader
 
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/v/hmljlkhcebhkkhbbafiheolbneecoinp?label=chrome%20web%20store&logo=googlechrome&logoColor=white&color=4285F4)](https://chromewebstore.google.com/detail/ms-teams-transcript-downl/hmljlkhcebhkkhbbafiheolbneecoinp)
 [![Users](https://img.shields.io/chrome-web-store/users/hmljlkhcebhkkhbbafiheolbneecoinp?label=users&color=34A853)](https://chromewebstore.google.com/detail/ms-teams-transcript-downl/hmljlkhcebhkkhbbafiheolbneecoinp)
 [![Rating](https://img.shields.io/chrome-web-store/rating/hmljlkhcebhkkhbbafiheolbneecoinp?label=rating&color=FBBC04)](https://chromewebstore.google.com/detail/ms-teams-transcript-downl/hmljlkhcebhkkhbbafiheolbneecoinp/reviews)
+[![Firefox](https://img.shields.io/badge/firefox-available-FF7139?logo=firefoxbrowser&logoColor=white)](https://github.com/brendangooden/ms-teams-sharepoint-downloader/releases)
 [![GitHub stars](https://img.shields.io/github/stars/brendangooden/ms-teams-sharepoint-downloader?style=flat&logo=github&label=stars&color=EA4335)](https://github.com/brendangooden/ms-teams-sharepoint-downloader/stargazers)
 [![License](https://img.shields.io/github/license/brendangooden/ms-teams-sharepoint-downloader?color=blue)](LICENSE)
 [![Manifest V3](https://img.shields.io/badge/manifest-v3-9333ea)](src/manifest.json)
@@ -50,17 +51,25 @@ Works on:
 
 ## Installation
 
-### Method 1 — Chrome Web Store
+### Chrome — Chrome Web Store
 
 Open <https://chromewebstore.google.com/detail/ms-teams-transcript-downl/hmljlkhcebhkkhbbafiheolbneecoinp> and click **Add to Chrome**.
 
-### Method 2 — Load unpacked (development)
+### Firefox — install from GitHub releases
+
+Not yet on Firefox Add-ons. Download the latest `ms-teams-downloader-firefox-v*.zip` from [GitHub Releases](https://github.com/brendangooden/ms-teams-sharepoint-downloader/releases), then:
+
+1. Open `about:debugging#/runtime/this-firefox`.
+2. Click **Load Temporary Add-on**.
+3. Select the `.zip` file downloaded above.
+
+> Temporary add-ons last only for the current session. For permanent installation the add-on needs AMO signing, tracked in [issue #XX](https://github.com/brendangooden/ms-teams-sharepoint-downloader/issues/XX).
+
+### Load unpacked (development)
 
 1. Clone or download this repository.
-2. Open `chrome://extensions/`.
-3. Toggle **Developer mode** on (top right).
-4. Click **Load unpacked** and select the `src/` folder.
-5. You should see **MS Teams Video & Transcript Downloader** in the list.
+2. **Chrome:** Open `chrome://extensions/`, toggle **Developer mode**, click **Load unpacked**, select `src/`.
+3. **Firefox:** Open `about:debugging#/runtime/this-firefox`, click **Load Temporary Add-on**, select `src/manifest.json` (or any file in `src/`).
 
 ## Usage
 
@@ -110,7 +119,7 @@ src/
 4. Confirm you have permission to view the content.
 
 ### Extension not working
-1. Reload it from `chrome://extensions/`.
+1. Reload it (`chrome://extensions/` → reload, or `about:debugging#/runtime/this-firefox` → Remove → re-add).
 2. Clear cache and reload the SharePoint/Teams page.
 
 ## Privacy & security
@@ -122,7 +131,7 @@ src/
 
 ## Known limitations
 
-- Chrome / Edge only (Manifest V3).
+- Chrome, Edge, and Firefox 128+ (Firefox requires loading as a temporary add-on until the add-on is signed on AMO).
 - Only works when you can actually view the content in the native UI — it cannot bypass access restrictions.
 - Output formats are MP4 (video, video+audio) and M4A (audio only). MP3 / WAV are no longer supported — Microsoft now AES-128-CBC encrypts SharePoint Stream segments, and no external CLI tool (ffmpeg, yt-dlp, etc.) can handle the resulting fragments. Transcode in-browser-downloaded files locally if you need a different format.
 
@@ -140,7 +149,7 @@ MIT — see `LICENSE`.
 Open an issue on GitHub and pick the **Bug report** template. It asks for the things that actually help diagnose problems:
 
 - Page URL **pattern** (redact tenant/file IDs — only the shape is needed)
-- Chrome DevTools console output (F12 → Console → filter by `Transcript Downloader`)
+- Browser DevTools console output (F12 → Console → filter by `Transcript Downloader`; Firefox: right-click → Inspect → Console)
 - Screenshots of the page, the modal, or the console
 - Extension version and browser/OS
 
